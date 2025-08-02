@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301] # Redirect trailing slash to non-slash
+RewriteRule ^(.*)$ index.php?$1 [L,QSA] # Route to index.php

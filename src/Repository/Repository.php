@@ -1,28 +1,21 @@
 <?php
+
 namespace App\Repository;
 
-use PDO;
+use App\Database\Database;
 
 abstract class Repository
 {
-    protected PDO $pdo;
+    protected Database $database;
     protected string $table;
+
     public function __construct()
     {
-        $settings = DB_SETTINGS;
-        $dsn = sprintf(
-            'mysql:host=%s;dbname=%s;charset=%s',
-            $settings['host'],
-            $settings['database'],
-            $settings['charset']
-        );
-        $this->pdo = new PDO($dsn, $settings['username'], $settings['password'], $settings['flags']);
+        $this->database = Database::getInstance();
     }
 
     public function selectAll($requestData)
     {
-        $sql = "SELECT * FROM $this->table";
-
-        return $this->pdo->query($sql);
+        return $this->database->selectAll($this->table);
     }
 };

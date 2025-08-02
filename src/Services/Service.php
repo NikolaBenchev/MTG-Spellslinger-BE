@@ -15,5 +15,15 @@ abstract class Service
         $this->repository = $repository;
     }
 
-    public function getEntityCollection(Request $request, Response $response, $args = []) {}
+    public function getEntityCollection(Request $request, Response $response, $args = [])
+    {
+        return [
+            'list' => $this->repository->selectAll([]),
+            'pagination' => [
+                'totalCount' => 1,
+                'limit' => 1,
+                'page' => 0
+            ]
+        ];
+    }
 };

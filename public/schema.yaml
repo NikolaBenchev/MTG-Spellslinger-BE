@@ -1,0 +1,46 @@
+openapi: 3.0.3
+paths:
+  /users:
+    get:
+      summary: Get all users
+      description: Returns all users
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Register 
+      description: Create a new user
+      responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        uuid:
+          type: string
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        rankUuid:
+          type: string
+        settings:
+          type: object

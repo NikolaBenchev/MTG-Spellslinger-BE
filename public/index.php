@@ -9,6 +9,7 @@ require __DIR__ . '/../config/db_config.php';
 
 $app = AppFactory::create();
 
+// TODO: use constants or even .env variables
 $redis = new PredisClient([
     'scheme'   => 'tcp',
     'host'     => '127.0.0.1',
@@ -16,7 +17,6 @@ $redis = new PredisClient([
     'password' => '',
     'database' => 0,
 ]);
-
 
 require __DIR__ . '/../routes.php';
 
