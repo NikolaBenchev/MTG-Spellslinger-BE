@@ -11,7 +11,7 @@ final class CreateUserRanksTable extends AbstractMigration
     {
         $this->execute(
             "CREATE TABLE role(
-                uuid varchar(32),
+                uuid varchar(36),
                 name varchar(32) UNIQUE NOT NULL,
                 description TEXT,
                 PRIMARY KEY (uuid)
