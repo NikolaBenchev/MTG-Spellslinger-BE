@@ -38,10 +38,46 @@ class Database
 
     public function selectAll($tableName, $columns = [], $params = [])
     {
-        $queryString = "SELECT * FROM $tableName";
+        $queryString = 'SELECT ' .
+            (empty($columns) ? "* " : implode(',', $columns))
+            . "FROM $tableName";
+
+        $queryString .= $this->parseAdditionalParams($params);
+
         $query = $this->pdo->prepare($queryString);
         $query->execute();
 
         return $query->fetchAll();
+    }
+
+    private function parseAdditionalParams($params): string
+    {
+        $filterString = '';
+        /*
+            uuid, name, colors, commander, cards?, owned cards?
+
+            mtg-spellslinger.whf.bz/decks?filter[cards]=[{cards}]
+        */
+        if(!empty($params['filter'])) {
+            $filterString = ' WHERE ';
+            $index = 0;
+            foreach(array_keys($params['filter']) as $key) {
+                $filterString .= ($index !== 0 && ' AND') . " $key=" . $params['filter'][$key];
+                $index++;
+            }
+        }
+        
+
+        $groupString = '';
+        if(!empty($params['group'])) {
+            $groupString = ' GROUP BY ' . implode(',', $params['group']);
+        }
+
+        $orderString = '';
+        if(!empty($params['order'])) {
+            $orderString = ' ORDER BY ' . implode(',', $params['order']);
+        }
+
+        return $filterString . $groupString . $orderString;
     }
 };

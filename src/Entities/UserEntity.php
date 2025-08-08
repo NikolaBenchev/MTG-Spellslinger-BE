@@ -1,5 +1,8 @@
 <?php
-class UserEntity
+
+namespace App\Entities;
+
+class UserEntity extends Entity
 {
     private string $uuid;
 

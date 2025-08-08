@@ -1,4 +1,4 @@
 <?php
-class RoutingMiddleware {
+// class RoutingMiddleware {
 
-};
+// };
