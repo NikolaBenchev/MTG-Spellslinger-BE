@@ -7,9 +7,11 @@ use App\Entities\UserEntity;
 
 class EntityFactory
 {
-    public function createEntityFromRequest(string $entityName, array $requestData)
+    public static function createEntityFromRequest(string $entityName, array $requestData)
     {
-        $entity = new UserEntity();
+        $entityFQN = 'App\Entities\\' . ucfirst($entityName) . 'Entity';
+        $entity = new $entityFQN();
+
 
         foreach ($requestData as $key => $value) {
             if (property_exists($entity, $key)) {
@@ -21,7 +23,7 @@ class EntityFactory
         return $entity;
     }
 
-    public function createEntityFromDatabase(string $entityName, array $data)
+    public static function createEntityFromDatabase(string $entityName, array $data)
     {
         $entity = new $entityName();
 

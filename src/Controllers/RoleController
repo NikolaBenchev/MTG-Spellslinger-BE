@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
-class UserController extends Controller
-{
+use App\Services\RoleService;
+
+class RoleController extends Controller {
     public function getDefaultServiceName(): string
     {
-        return 'user';
+        return 'role';
     }
-};
+}

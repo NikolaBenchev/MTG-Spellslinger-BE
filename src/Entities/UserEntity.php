@@ -4,8 +4,7 @@ namespace App\Entities;
 
 class UserEntity extends Entity
 {
-    private string $uuid;
-
+    protected ?string $uuid = null;
     public function getUuid()
     {
         return $this->uuid;
@@ -16,19 +15,18 @@ class UserEntity extends Entity
         $this->uuid = $uuid;
     }
 
-    private string $displayName;
-
-    public function getDisplayName()
+    protected ?string $username = null;
+    public function getUsername()
     {
-        return $this->displayName;
+        return $this->username;
     }
 
-    public function setDisplayName($displayName)
+    public function setUsername($username)
     {
-        $this->displayName = $displayName;
+        $this->username = $username;
     }
 
-    private string $email;
+    protected ?string $email = null;
     public function getEmail()
     {
         return $this->email;
@@ -39,7 +37,7 @@ class UserEntity extends Entity
         $this->email = $email;
     }
 
-    private string $password;
+    protected ?string $password = null;
     public function getPassword()
     {
         return $this->password;
@@ -49,7 +47,8 @@ class UserEntity extends Entity
     {
         $this->password = $password;
     }
-    private $settings;
+
+    protected $settings = null;
     public function getSettings()
     {
         return $this->settings;
@@ -59,8 +58,8 @@ class UserEntity extends Entity
     {
         $this->settings = $settings;
     }
-    private string $roleUuid;
 
+    protected ?string $roleUuid = null;
     public function getRoleUuid()
     {
         return $this->roleUuid;
@@ -75,7 +74,7 @@ class UserEntity extends Entity
     {
         return [
             'uuid',
-            'display_name',
+            'username',
             'email',
             'password',
             'settings',
@@ -87,7 +86,7 @@ class UserEntity extends Entity
     {
         return [
             'uuid',
-            'displayName',
+            'username',
             'email',
             'password',
             'settings',

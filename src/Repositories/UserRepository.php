@@ -1,5 +1,5 @@
 <?php
-namespace App\Repository;
+namespace App\Repositories;
 
 class UserRepository extends Repository
 {
@@ -9,8 +9,8 @@ class UserRepository extends Repository
         $this->table = 'user';
     }
 
-    public function getEntityName() 
+    public function getEntityName(): string
     {
-        return 'App\Entities\UserEntity';
+        return 'user';
     }
 };

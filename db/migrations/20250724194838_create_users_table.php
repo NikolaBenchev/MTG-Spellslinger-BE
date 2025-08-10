@@ -11,9 +11,9 @@ final class CreateUsersTable extends AbstractMigration
         $this->execute(
             "CREATE TABLE user(
                 uuid varchar(36),
-                display_name varchar(32) NOT NULL,
+                username varchar(32) NOT NULL,
                 email varchar(32) NOT NULL,
-                password varchar(32) NOT NULL,
+                password varchar(255) NOT NULL,
                 settings JSON,
                 role_uuid varchar(36) NOT NULL,
                 PRIMARY KEY (uuid),

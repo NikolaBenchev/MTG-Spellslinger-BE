@@ -39,7 +39,7 @@ class Database
     public function selectAll($tableName, $columns = [], $params = [])
     {
         $queryString = 'SELECT ' .
-            (empty($columns) ? "* " : implode(',', $columns))
+            (empty($columns) ? '* ' : implode(',', $columns))
             . "FROM $tableName";
 
         $queryString .= $this->parseAdditionalParams($params);
@@ -50,6 +50,20 @@ class Database
         return $query->fetchAll();
     }
 
+    public function insert($tableName, $params = [])
+    {
+        $placeholders = array_fill(0, count($params), '?');
+
+        $queryString = "INSERT INTO 
+            $tableName(" . implode(',', array_keys($params)) . ') 
+            VALUES(' . implode(',', $placeholders) . ')'; 
+
+        $query = $this->pdo->prepare($queryString);
+        $query->execute(array_values($params));
+
+        return $this->pdo->lastInsertId();
+    }
+
     private function parseAdditionalParams($params): string
     {
         $filterString = '';
@@ -58,23 +72,22 @@ class Database
 
             mtg-spellslinger.whf.bz/decks?filter[cards]=[{cards}]
         */
-        if(!empty($params['filter'])) {
+        if (!empty($params['filter'])) {
             $filterString = ' WHERE ';
             $index = 0;
-            foreach(array_keys($params['filter']) as $key) {
-                $filterString .= ($index !== 0 && ' AND') . " $key=" . $params['filter'][$key];
+            foreach (array_keys($params['filter']) as $key) {
+                $filterString .= ($index !== 0 && ' AND') . " $key='" . $params['filter'][$key] . "'";
                 $index++;
             }
         }
-        
 
         $groupString = '';
-        if(!empty($params['group'])) {
+        if (!empty($params['group'])) {
             $groupString = ' GROUP BY ' . implode(',', $params['group']);
         }
 
         $orderString = '';
-        if(!empty($params['order'])) {
+        if (!empty($params['order'])) {
             $orderString = ' ORDER BY ' . implode(',', $params['order']);
         }
 

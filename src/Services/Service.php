@@ -2,10 +2,7 @@
 
 namespace App\Services;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
-
-use App\Repository\Repository;
+use App\Repositories\Repository;
 use App\Factory\EntityFactory;
 
 abstract class Service
@@ -13,21 +10,24 @@ abstract class Service
     protected Repository $repository;
     protected EntityFactory $entityFactory;
 
-    public function __construct(Repository $repository, EntityFactory $entityFactory)
-    {
-        $this->repository = $repository;
-        $this->entityFactory = $entityFactory;
+    public function __construct() {
+        $repositoryName = $this->getDefaultRepositoryName();
+        $repositoryFQN = 'App\Repositories\\' . ucfirst($repositoryName) . 'Repository';
+
+        $this->repository = new $repositoryFQN();
+        $this->entityFactory = new EntityFactory();
     }
 
-    // TODO: maybe change parameters to $requestData only
-    public function getEntityCollection(Request $request, Response $response, $args = [])
+    public function getEntityCollection($params)
     {
         $result = $this->repository->selectAll([]);
         $entityCollection = [];
 
         foreach ($result as $entityData) {
-            $entity = $this->entityFactory->createEntityFromDatabase(
-                $this->repository->getEntityName(), 
+            $entityName = $this->repository->getEntityName();
+            $entityFQN = 'App\Entities\\' . ucfirst($entityName) . 'Entity';
+            $entity = EntityFactory::createEntityFromDatabase(
+                $entityFQN, 
                 $entityData
             );
 
@@ -44,8 +44,25 @@ abstract class Service
         ];
     }
 
-    public function create()
+    public function create($requestData)
     {
-        return true;
+        $entity = EntityFactory::createEntityFromRequest(
+            $this->repository->getEntityName(), 
+            $requestData
+        );
+
+
+        $lastInsertedUuid = $this->repository->create($entity->getDatabaseParams());
+        if ($lastInsertedUuid != 0) {
+            $entity->setUuid($lastInsertedUuid);
+        }
+
+        return $entity;
     }
+
+    public function getBy($params) {
+        return $this->repository->selectOne($params);
+    }
+
+    abstract public function getDefaultRepositoryName(): string;
 };

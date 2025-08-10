@@ -2,13 +2,37 @@
 
 namespace App\Services;
 
-use App\Repository\UserRepository;
-use App\Factory\EntityFactory;
+use App\Entities\RoleEntity;
 
 class UserService extends Service
 {
+    private RoleService $roleService;
     public function __construct()
     {
-        parent::__construct(new UserRepository(), new EntityFactory());
+        parent::__construct();
+        $this->roleService = new RoleService();
+    }
+
+    public function create($requestData)
+    {
+        if (!isset($requestData['role'])) {
+            $requestData['role'] = RoleEntity::USER;
+        }
+
+        $requestData['roleUuid'] = $this->roleService->getBy([
+            'name' => $requestData['role']
+        ])['uuid'];
+
+        unset($requestData['repeatPassword']);
+        unset($requestData['role']);
+
+        $requestData['password'] = password_hash($requestData['password'], PASSWORD_DEFAULT);
+
+        return parent::create($requestData);
+    }
+
+    public function getDefaultRepositoryName(): string
+    {
+        return 'user';
     }
 };

@@ -26,6 +26,18 @@ paths:
               properties:
                 message:
                   type: string
+  /login:
+    post:
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
 components:
   schemas:
     User:
@@ -33,7 +45,7 @@ components:
       properties:
         uuid:
           type: string
-        displayName:
+        username:
           type: string
         email:
           type: string
