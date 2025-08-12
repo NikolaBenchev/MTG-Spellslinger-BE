@@ -22,9 +22,9 @@ abstract class Controller
     public function getEntityCollection(Request $request, Response $response, $args = []): Response
     {
         $params = $request->getQueryParams();
-        $params = array_merge($params, $args);
+        $requestData = array_merge($params, $args);
 
-        $result = $this->service->getEntityCollection($params);
+        $result = $this->service->getEntityCollection($requestData);
 
         return $this->buildResponse($response, 200, $result);
     }
@@ -33,7 +33,7 @@ abstract class Controller
     {
         $requestDataContent = $request->getBody()->getContents();
         $requestData = \json_decode($requestDataContent, true);
-
+        
         //TODO: validate create
 
         try {
@@ -46,16 +46,33 @@ abstract class Controller
         return $this->buildResponse($response, 200, true);
     }
 
-    public function getBy(
-        Request $request, 
-        Response $response, 
+    public function delete(
+        Request $request,
+        Response $response,
         $args = []
     ) {
-        $params = $request->getQueryParams();
-        $params = array_merge($params, $args);
+        // TODO: validate delete
         
-        $this->service->getBy($params);
+        try {
+            $this->service->delete($args);
+        } catch (Exception $e) {
+            throw $e;
+            return $this->buildResponse($response, $e->getCode(), $e->getMessage());
+        }
+
+        return $this->buildResponse($response, 200, true);
+
     }
+    // public function getBy(
+    //     Request $request, 
+    //     Response $response, 
+    //     $args = []
+    // ) {
+    //     $params = $request->getQueryParams();
+    //     $params = array_merge($params, $args);
+        
+    //     return $this->service->getBy($params);
+    // }
 
     public function buildResponse(Response $response, $status, $data = []): Response
     {

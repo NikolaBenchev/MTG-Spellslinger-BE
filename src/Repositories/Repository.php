@@ -33,5 +33,9 @@ abstract class Repository
         return $this->database->insert($this->table, $params);
     }
 
+    public function delete($params) {
+        return $this->database->delete($this->table, $params);
+    }
+
     public abstract function getEntityName(): string;
 };

@@ -10,7 +10,8 @@ abstract class Service
     protected Repository $repository;
     protected EntityFactory $entityFactory;
 
-    public function __construct() {
+    public function __construct()
+    {
         $repositoryName = $this->getDefaultRepositoryName();
         $repositoryFQN = 'App\Repositories\\' . ucfirst($repositoryName) . 'Repository';
 
@@ -27,7 +28,7 @@ abstract class Service
             $entityName = $this->repository->getEntityName();
             $entityFQN = 'App\Entities\\' . ucfirst($entityName) . 'Entity';
             $entity = EntityFactory::createEntityFromDatabase(
-                $entityFQN, 
+                $entityFQN,
                 $entityData
             );
 
@@ -47,7 +48,7 @@ abstract class Service
     public function create($requestData)
     {
         $entity = EntityFactory::createEntityFromRequest(
-            $this->repository->getEntityName(), 
+            $this->repository->getEntityName(),
             $requestData
         );
 
@@ -60,8 +61,18 @@ abstract class Service
         return $entity;
     }
 
-    public function getBy($params) {
-        return $this->repository->selectOne($params);
+    public function getBy($params)
+    {
+        return $this->repository->selectOne([
+            'filter' => $params
+        ]);
+    }
+
+    public function delete($args)
+    {
+        return $this->repository->delete([
+            'filter' => $args
+        ]);
     }
 
     abstract public function getDefaultRepositoryName(): string;

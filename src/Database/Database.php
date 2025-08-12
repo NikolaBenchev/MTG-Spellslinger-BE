@@ -2,6 +2,7 @@
 
 namespace App\Database;
 
+use App\Helpers\Helper;
 use PDO;
 use PDOException;
 
@@ -62,6 +63,17 @@ class Database
         $query->execute(array_values($params));
 
         return $this->pdo->lastInsertId();
+    }
+
+    public function delete($tableName, $params)
+    {
+        //TODO: transaction
+        $queryString = "DELETE FROM $tableName";
+        $queryString .= $this->parseAdditionalParams($params);
+
+        $query = $this->pdo->prepare($queryString);
+
+        $query->execute();
     }
 
     private function parseAdditionalParams($params): string

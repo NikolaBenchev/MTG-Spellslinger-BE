@@ -21,7 +21,7 @@ class AccessConfig {
             // self::GET,
             self::CREATE,
             // self::UPDATE,
-            // self::DELETE
+            self::DELETE
         ];
     }
 }
