@@ -43,10 +43,12 @@ class Database
             (empty($columns) ? '* ' : implode(',', $columns))
             . "FROM $tableName";
 
-        $queryString .= $this->parseAdditionalParams($params);
+        $additionalParamsObj = $this->parseAdditionalParams($params);
+
+        $queryString .= $additionalParamsObj['query'];
 
         $query = $this->pdo->prepare($queryString);
-        $query->execute();
+        $query->execute($additionalParamsObj['params']);
 
         return $query->fetchAll();
     }
@@ -57,7 +59,7 @@ class Database
 
         $queryString = "INSERT INTO 
             $tableName(" . implode(',', array_keys($params)) . ') 
-            VALUES(' . implode(',', $placeholders) . ')'; 
+            VALUES(' . implode(',', $placeholders) . ')';
 
         $query = $this->pdo->prepare($queryString);
         $query->execute(array_values($params));
@@ -69,14 +71,29 @@ class Database
     {
         //TODO: transaction
         $queryString = "DELETE FROM $tableName";
-        $queryString .= $this->parseAdditionalParams($params);
+
+        $additionalParamsObj = $this->parseAdditionalParams($params);
+
+        $queryString .= $additionalParamsObj['query'];
+
+        $query = $this->pdo->prepare($queryString);
+        return $query->execute($additionalParamsObj['params']);
+    }
+
+    public function exists($tableName, $params)
+    {
+        $queryString = "SELECT 1 FROM $tableName";
+        $additionalParamsObj = $this->parseAdditionalParams($params);
+        $queryString .= $additionalParamsObj['query'];
+        $queryString .= ' LIMIT 1';
 
         $query = $this->pdo->prepare($queryString);
 
-        $query->execute();
+        $query->execute($additionalParamsObj['params']);
+        return $query->fetch();
     }
 
-    private function parseAdditionalParams($params): string
+    private function parseAdditionalParams($params): array
     {
         $filterString = '';
         /*
@@ -88,21 +105,28 @@ class Database
             $filterString = ' WHERE ';
             $index = 0;
             foreach (array_keys($params['filter']) as $key) {
-                $filterString .= ($index !== 0 && ' AND') . " $key='" . $params['filter'][$key] . "'";
+                $filterString .= ($index === 0 ? '' : ' AND') . " $key=:$key";
                 $index++;
             }
         }
 
         $groupString = '';
         if (!empty($params['group'])) {
-            $groupString = ' GROUP BY ' . implode(',', $params['group']);
+            $groupString = ' GROUP BY ' . str_repeat('?,', count($params['group'])) . '?';
         }
 
         $orderString = '';
         if (!empty($params['order'])) {
-            $orderString = ' ORDER BY ' . implode(',', $params['order']);
+            $orderString = ' ORDER BY ' . str_repeat('?,', count($params['order'])) . '?';
         }
 
-        return $filterString . $groupString . $orderString;
+        return [
+            'query' => $filterString . $groupString . $orderString,
+            'params' => array_merge(
+                $params['filter'] ?? [],
+                $params['group'] ?? [],
+                $params['order'] ?? []
+            )
+        ];
     }
 };

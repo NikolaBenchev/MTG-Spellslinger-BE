@@ -33,13 +33,11 @@ abstract class Controller
     {
         $requestDataContent = $request->getBody()->getContents();
         $requestData = \json_decode($requestDataContent, true);
-        
-        //TODO: validate create
 
         try {
+            $this->validateCreate($requestData);
             $this->service->create($requestData);
-        } catch (Exception $e) {
-            throw $e;
+        } catch (\Exception $e) {
             return $this->buildResponse($response, $e->getCode(), $e->getMessage());
         }
 
@@ -52,16 +50,14 @@ abstract class Controller
         $args = []
     ) {
         // TODO: validate delete
-        
+
         try {
             $this->service->delete($args);
         } catch (Exception $e) {
-            throw $e;
             return $this->buildResponse($response, $e->getCode(), $e->getMessage());
         }
 
         return $this->buildResponse($response, 200, true);
-
     }
     // public function getBy(
     //     Request $request, 
@@ -70,7 +66,7 @@ abstract class Controller
     // ) {
     //     $params = $request->getQueryParams();
     //     $params = array_merge($params, $args);
-        
+
     //     return $this->service->getBy($params);
     // }
 
@@ -80,8 +76,9 @@ abstract class Controller
 
         return $response
             ->withHeader('Content-type', 'application/json')
-            ->withStatus($status);
+            ->withStatus(is_int($status) ? $status : 500);
     }
 
     abstract public function getDefaultServiceName(): string;
+    abstract protected function validateCreate($params): bool;
 };

@@ -27,7 +27,12 @@ final class CreateUserRanksTable extends AbstractMigration
             [
                 'uuid' => Uuid::uuid4()->toString(),
                 'name' => 'Admin',
-                'description' => 'Super user role. Has access to everything.'
+                'description' => 'Super user role. Can delete/edit other normal users and their decks.'
+            ],
+            [
+                'uuid' => Uuid::uuid4()->toString(),
+                'name' => 'Root',
+                'description' => 'On top of super user privileges can edit/delete admins and create admin accounts.'
             ]
         ];
 

@@ -21,7 +21,7 @@ abstract class Service
 
     public function getEntityCollection($params)
     {
-        $result = $this->repository->selectAll([]);
+        $result = $this->repository->selectAll($params);
         $entityCollection = [];
 
         foreach ($result as $entityData) {
@@ -45,11 +45,11 @@ abstract class Service
         ];
     }
 
-    public function create($requestData)
+    public function create($params)
     {
         $entity = EntityFactory::createEntityFromRequest(
             $this->repository->getEntityName(),
-            $requestData
+            $params
         );
 
 
@@ -73,6 +73,10 @@ abstract class Service
         return $this->repository->delete([
             'filter' => $args
         ]);
+    }
+
+    public function exists($params) {
+        return $this->repository->exists($params);
     }
 
     abstract public function getDefaultRepositoryName(): string;

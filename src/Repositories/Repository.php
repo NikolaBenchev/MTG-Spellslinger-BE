@@ -18,10 +18,13 @@ abstract class Repository
     public function selectAll($params)
     {
         // TODO: use request data to select only specific columns, add filters or groups to the query
-        return $this->database->selectAll($this->table);
+        $columns = $params['columns'] ?? [];
+        unset($params['columns']);
+
+        return $this->database->selectAll($this->table, $columns, $params);
     }
 
-    public function selectOne($params) 
+    public function selectOne($params)
     {
         return $this->database->selectAll($this->table, [], $params)[0];
     }
@@ -33,8 +36,13 @@ abstract class Repository
         return $this->database->insert($this->table, $params);
     }
 
-    public function delete($params) {
+    public function delete($params)
+    {
         return $this->database->delete($this->table, $params);
+    }
+
+    public function exists($params) {
+        return $this->database->exists($this->table, $params);
     }
 
     public abstract function getEntityName(): string;

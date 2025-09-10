@@ -6,6 +6,9 @@ class RoleEntity extends Entity
 {
     public const USER = 'user';
     public const ADMIN = 'admin';
+    public const ROOT = 'root';
+
+    public const ROLES = [self::USER, self::ADMIN, self::ROOT];
 
     protected ?string $uuid = null;
     public function getUuid()
