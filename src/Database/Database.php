@@ -37,7 +37,7 @@ class Database
     }
 
 
-    public function selectAll($tableName, $columns = [], $params = [])
+    public function select($tableName, $columns = [], $params = [], $selectOne = false)
     {
         $queryString = 'SELECT ' .
             (empty($columns) ? '* ' : implode(',', $columns))
@@ -50,7 +50,7 @@ class Database
         $query = $this->pdo->prepare($queryString);
         $query->execute($additionalParamsObj['params']);
 
-        return $query->fetchAll();
+        return $selectOne ? $query->fetch() : $query->fetchAll();
     }
 
     public function insert($tableName, $params = [])

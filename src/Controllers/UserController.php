@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use App\Entities\RoleEntity;
 
 class UserController extends Controller
@@ -26,5 +28,14 @@ class UserController extends Controller
             throw new \Exception('User with this email or username already exists.', 409);
 
         return true;
+    }
+
+    public function login(Request $request, Response $response, $args = [])
+    {
+        $requestDataContent = $request->getBody()->getContents();
+        $requestData = \json_decode($requestDataContent, true);
+
+        $this->service->login($requestData);
+        return $this->buildResponse($response, 200, []);
     }
 };

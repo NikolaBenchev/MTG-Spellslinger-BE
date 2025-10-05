@@ -7,10 +7,17 @@ use App\Entities\RoleEntity;
 class UserService extends Service
 {
     private RoleService $roleService;
+    // private RedisService $redisService;
+
     public function __construct()
     {
         parent::__construct();
         $this->roleService = new RoleService();
+    }
+
+    public function getDefaultRepositoryName(): string
+    {
+        return 'user';
     }
 
     public function create($requestData)
@@ -31,8 +38,10 @@ class UserService extends Service
         return parent::create($requestData);
     }
 
-    public function getDefaultRepositoryName(): string
+    public function login($requestData = [])
     {
-        return 'user';
+        $userData = $this->repository->select($requestData, true);
+
+
     }
 };

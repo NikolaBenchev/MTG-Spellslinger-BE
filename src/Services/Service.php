@@ -2,12 +2,11 @@
 
 namespace App\Services;
 
-use App\Repositories\Repository;
 use App\Factory\EntityFactory;
 
 abstract class Service
 {
-    protected Repository $repository;
+    protected $repository;
     protected EntityFactory $entityFactory;
 
     public function __construct()
@@ -21,7 +20,7 @@ abstract class Service
 
     public function getEntityCollection($params)
     {
-        $result = $this->repository->selectAll($params);
+        $result = $this->repository->select($params);
         $entityCollection = [];
 
         foreach ($result as $entityData) {

@@ -15,18 +15,12 @@ abstract class Repository
         $this->database = Database::getInstance();
     }
 
-    public function selectAll($params)
+    public function select($params, $selectOne = false)
     {
-        // TODO: use request data to select only specific columns, add filters or groups to the query
         $columns = $params['columns'] ?? [];
         unset($params['columns']);
 
-        return $this->database->selectAll($this->table, $columns, $params);
-    }
-
-    public function selectOne($params)
-    {
-        return $this->database->selectAll($this->table, [], $params)[0];
+        return $this->database->select($this->table, $columns, $params, $selectOne);
     }
 
     public function create($params)
@@ -41,7 +35,8 @@ abstract class Repository
         return $this->database->delete($this->table, $params);
     }
 
-    public function exists($params) {
+    public function exists($params)
+    {
         return $this->database->exists($this->table, $params);
     }
 

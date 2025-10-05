@@ -4,19 +4,24 @@ namespace App\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Predis\Client as RedisClient;
 
-use App\Services\Service;
 use Exception;
 
 abstract class Controller
 {
-    protected Service $service;
+    protected $service;
+    protected RedisClient $redis;
 
-    public function __construct()
+    public function __construct(RedisClient $redis)
     {
         $serviceName = $this->getDefaultServiceName();
         $serviceFQN = 'App\Services\\' . ucfirst($serviceName) . 'Service';
         $this->service = new $serviceFQN();
+        $this->redis = $redis;
+
+        var_dump($this->redis);
+        // echo $this->redis->get('count');
     }
 
     public function getEntityCollection(Request $request, Response $response, $args = []): Response
@@ -59,16 +64,6 @@ abstract class Controller
 
         return $this->buildResponse($response, 200, true);
     }
-    // public function getBy(
-    //     Request $request, 
-    //     Response $response, 
-    //     $args = []
-    // ) {
-    //     $params = $request->getQueryParams();
-    //     $params = array_merge($params, $args);
-
-    //     return $this->service->getBy($params);
-    // }
 
     public function buildResponse(Response $response, $status, $data = []): Response
     {
