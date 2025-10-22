@@ -12,8 +12,8 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Access-Control-Allow-Credentials: true');
 
-// $container = new Container();
-// AppFactory::setContainer($container);
+$container = new Container();
+AppFactory::setContainer($container);
 $app = AppFactory::create();
 
 require __DIR__ . '/../routes.php';

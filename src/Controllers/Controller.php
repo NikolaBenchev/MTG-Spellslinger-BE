@@ -4,24 +4,18 @@ namespace App\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Predis\Client as RedisClient;
 
 use Exception;
 
 abstract class Controller
 {
     protected $service;
-    protected RedisClient $redis;
 
-    public function __construct(RedisClient $redis)
+    public function __construct()
     {
         $serviceName = $this->getDefaultServiceName();
         $serviceFQN = 'App\Services\\' . ucfirst($serviceName) . 'Service';
         $this->service = new $serviceFQN();
-        $this->redis = $redis;
-
-        var_dump($this->redis);
-        // echo $this->redis->get('count');
     }
 
     public function getEntityCollection(Request $request, Response $response, $args = []): Response

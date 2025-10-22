@@ -2,8 +2,12 @@
 
 namespace App\Controllers;
 
-class RoleController extends Controller {
-    public function validateCreate($params): bool 
+use App\Services\RoleService;
+
+class RoleController extends Controller
+{
+
+    public function validateCreate($params): bool
     {
         return false;
     }

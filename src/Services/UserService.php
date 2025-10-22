@@ -7,7 +7,6 @@ use App\Entities\RoleEntity;
 class UserService extends Service
 {
     private RoleService $roleService;
-    // private RedisService $redisService;
 
     public function __construct()
     {
@@ -41,7 +40,29 @@ class UserService extends Service
     public function login($requestData = [])
     {
         $userData = $this->repository->select($requestData, true);
+        if (empty($userData))
+            throw new \Exception('Wrong email or password!', 401);
 
+        unset($userData['password']);
 
+        session_regenerate_id();
+        $_SESSION['userData'] = $userData;
+        $_SESSION['isAuthenticated'] = true;
+
+        return $_SESSION;
+    }
+
+    public function logout($sessionUuid)
+    {
+        // $this->redis->delete("users/$sessionUuid");
+    }
+
+    public function checkAuth()
+    {
+        return $_SESSION;
+        return [
+            'userUuid' => $_SESSION['userData']['uuid'] ?? null,
+            'isAuthenticated' => $_SESSION['is_authenticated'] ?? false
+        ];
     }
 };

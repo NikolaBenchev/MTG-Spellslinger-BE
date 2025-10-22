@@ -8,12 +8,12 @@ use App\Router\AccessConfig;
 
 include __DIR__ . '/src/Controllers/UserController.php';
 
-$userControllerName = "App\Controllers\UserController";
+$userControllerFQN = "App\Controllers\UserController";
 
 $app->group(
     '',
-    function (RouteCollectorProxy $route) {
-        $route->get('/', function(ServerRequestInterface $request, ResponseInterface $response) {
+    function (RouteCollectorProxy $route) use ($userControllerFQN) {
+        $route->get('/', function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("MTG-Spellslinger API");
             return $response;
         });
@@ -30,6 +30,8 @@ $app->group(
             }
         );
 
-        // $route->post('/login', );
-    } 
+        $route->post('/login', $userControllerFQN . ':login');
+
+        $route->get('/checkAuth', $userControllerFQN . ':checkAuth');
+    }
 );

@@ -4,10 +4,13 @@ namespace App\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use App\Services\UserService;
 use App\Entities\RoleEntity;
 
 class UserController extends Controller
 {
+    protected $service;
+
     public function getDefaultServiceName(): string
     {
         return 'user';
@@ -35,7 +38,21 @@ class UserController extends Controller
         $requestDataContent = $request->getBody()->getContents();
         $requestData = \json_decode($requestDataContent, true);
 
-        $this->service->login($requestData);
+        $userUuid = $this->service->login($requestData);
+        return $this->buildResponse($response, 200, $userUuid);
+    }
+
+    public function logout(Request $request, Response $response, $args = [])
+    {
+        $this->service->logout($args['userUuid']);
+
         return $this->buildResponse($response, 200, []);
+    }
+
+    public function checkAuth(Request $request, Response $response, $args = [])
+    {
+        $responseData = $this->service->checkAuth();
+
+        return $this->buildResponse($response, 200, $responseData);
     }
 };

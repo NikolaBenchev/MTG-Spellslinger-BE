@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Factory\EntityFactory;
+use Predis\Client as RedisClient;
 
 abstract class Service
 {
