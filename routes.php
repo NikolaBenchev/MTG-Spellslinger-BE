@@ -33,5 +33,7 @@ $app->group(
         $route->post('/login', $userControllerFQN . ':login');
 
         $route->get('/checkAuth', $userControllerFQN . ':checkAuth');
+
+        $route->get('/getUserData', $userControllerFQN . ':getEntity');
     }
 );

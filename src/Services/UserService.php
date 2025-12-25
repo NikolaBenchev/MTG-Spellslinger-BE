@@ -25,9 +25,9 @@ class UserService extends Service
             $requestData['role'] = RoleEntity::USER;
         }
 
-        $requestData['roleUuid'] = $this->roleService->getBy([
+        $requestData['roleUuid'] = $this->roleService->getEntity([
             'name' => $requestData['role']
-        ])['uuid'];
+        ])->getUuid();
 
         unset($requestData['repeatPassword']);
         unset($requestData['role']);
@@ -59,10 +59,9 @@ class UserService extends Service
 
     public function checkAuth()
     {
-        return $_SESSION;
         return [
             'userUuid' => $_SESSION['userData']['uuid'] ?? null,
-            'isAuthenticated' => $_SESSION['is_authenticated'] ?? false
+            'isAuthenticated' => $_SESSION['isAuthenticated'] ?? false
         ];
     }
 };

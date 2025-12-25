@@ -25,12 +25,7 @@ abstract class Service
         $entityCollection = [];
 
         foreach ($result as $entityData) {
-            $entityName = $this->repository->getEntityName();
-            $entityFQN = 'App\Entities\\' . ucfirst($entityName) . 'Entity';
-            $entity = EntityFactory::createEntityFromDatabase(
-                $entityFQN,
-                $entityData
-            );
+            $entity = $this->repository->createEntity($entityData);
 
             array_push($entityCollection, $entity);
         }
@@ -43,6 +38,13 @@ abstract class Service
                 'page' => 0
             ]
         ];
+    }
+
+    public function getEntity($params)
+    {
+        $entityData = $this->repository->select($params, true);
+
+        return $this->repository->createEntity($entityData);
     }
 
     public function create($params)
@@ -61,13 +63,6 @@ abstract class Service
         return $entity;
     }
 
-    public function getBy($params)
-    {
-        return $this->repository->selectOne([
-            'filter' => $params
-        ]);
-    }
-
     public function delete($args)
     {
         return $this->repository->delete([
@@ -75,7 +70,8 @@ abstract class Service
         ]);
     }
 
-    public function exists($params) {
+    public function exists($params)
+    {
         return $this->repository->exists($params);
     }
 

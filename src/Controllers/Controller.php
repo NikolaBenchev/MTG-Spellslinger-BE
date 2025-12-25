@@ -28,6 +28,16 @@ abstract class Controller
         return $this->buildResponse($response, 200, $result);
     }
 
+    public function getEntity(Request $request, Response $response, $args = []): Response
+    {
+        $params = $request->getQueryParams();
+        $requestData = array_merge($params, $args);
+
+        $entity = $this->service->getEntity($requestData);
+
+        return $this->buildResponse($response, 200, $entity);
+    }
+
     public function create(Request $request, Response $response, $args = []): Response
     {
         $requestDataContent = $request->getBody()->getContents();

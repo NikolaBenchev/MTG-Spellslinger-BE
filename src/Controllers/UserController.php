@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Services\UserService;
 use App\Entities\RoleEntity;
 
 class UserController extends Controller

@@ -3,7 +3,9 @@
 namespace App\Repositories;
 
 use App\Database\Database;
+use App\Entities\Entity;
 use Ramsey\Uuid\Nonstandard\Uuid;
+use App\Factory\EntityFactory;
 
 abstract class Repository
 {
@@ -38,6 +40,14 @@ abstract class Repository
     public function exists($params)
     {
         return $this->database->exists($this->table, $params);
+    }
+
+    public function createEntity($entityData): Entity
+    {
+        $entityName = $this->getEntityName();
+        $entityFQN = 'App\Entities\\' . ucfirst($entityName) . 'Entity';
+
+        return EntityFactory::createEntityFromDatabase($entityFQN, $entityData);
     }
 
     public abstract function getEntityName(): string;

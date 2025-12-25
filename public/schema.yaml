@@ -1,58 +1,79 @@
 openapi: 3.0.3
 paths:
-  /users:
-    get:
-      summary: Get all users
-      description: Returns all users
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-    post:
-      summary: Register 
-      description: Create a new user
-      responses:
-      '200':
-        description: Success
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-  /login:
-    post:
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+    /users:
+        get:
+            summary: Get all users
+            description: Returns all users
+            responses:
+                "200":
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/User"
+        post:
+            summary: Register
+            description: Create a new user
+            responses:
+            "200":
+                description: Success
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                message:
+                                    type: string
+    /login:
+        post:
+            responses:
+                "200":
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+    /checkAuth:
+        get:
+            responses:
+                "200":
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    isAuthenticated: bool
+                                    userUuid: string
+    /getUserData:
+        get:
+            responses:
+                "200":
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                type: User
 components:
-  schemas:
-    User:
-      type: object
-      properties:
-        uuid:
-          type: string
-        username:
-          type: string
-        email:
-          type: string
-          format: email
-        password:
-          type: string
-        rankUuid:
-          type: string
-        settings:
-          type: object
+    schemas:
+        User:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                username:
+                    type: string
+                email:
+                    type: string
+                    format: email
+                password:
+                    type: string
+                rankUuid:
+                    type: string
+                settings:
+                    type: object
